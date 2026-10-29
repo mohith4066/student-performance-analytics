@@ -1,0 +1,54 @@
+================================================================================
+STUDENT PERFORMANCE ANALYTICS SYSTEM - SUMMARY REPORT
+================================================================================
+
+1. EXECUTIVE SUMMARY
+----------------------------------------
+Total Students Evaluated  : 20
+Class Overall Average     : 75.42%
+Class Median Average      : 79.2%
+Class Standard Deviation  : 16.31
+Passing Students          : 17 (85.0%)
+Failing Students          : 3
+Highest Performing Student: Arjun Reddy (96.8%)
+Lowest Performing Student : Varun Kapoor (40.0%)
+
+2. CORE PRACTICAL QUESTIONS ANSWERED
+----------------------------------------
+Q1. Which student has highest average? -> Arjun Reddy (STU115 - Data Science) with an average of 96.8% (Grade: A+)
+Q2. Which subject has best average?    -> Python_Programming with an average score of 79.7 / 100
+Q3. How many students passed?          -> 17 out of 20 students (85.0%)
+Q4. What is overall class average?     -> 75.42%
+
+3. SUBJECT-WISE PERFORMANCE TABLE
+----------------------------------------
+           Subject  Average  Median  Highest  Top_Scorer  Lowest  Std_Dev  Pass_Rate_%
+       Mathematics    72.90   77.00    96.00 Arjun Reddy   35.00    18.34        90.00
+           Physics    70.65   73.00    94.00 Arjun Reddy   38.00    15.91        95.00
+  Computer_Science    77.25   81.00    98.00 Arjun Reddy   42.00    15.80       100.00
+Python_Programming    79.70   84.50    99.00 Arjun Reddy   45.00    15.80       100.00
+      Data_Science    76.60   80.50    97.00 Ananya Iyer   40.00    16.26       100.00
+
+4. TOP 5 PERFORMING STUDENTS
+----------------------------------------
+  Rank StudentID           Name              Department  Total_Marks  Average_Marks Grade  Attendance Result
+Rank 1    STU115    Arjun Reddy            Data Science       484.00          96.80    A+       99.00   Pass
+Rank 2    STU104    Ananya Iyer  Information Technology       473.00          94.60    A+       98.00   Pass
+Rank 3    STU101   Aarav Sharma Artificial Intelligence       467.00          93.40    A+       96.50   Pass
+Rank 4    STU110 Sneha Kulkarni        Computer Science       456.00          91.20    A+       95.50   Pass
+Rank 5    STU120    Kavya Menon            Data Science       450.00          90.00    A+       96.00   Pass
+
+5. DEPARTMENT-WISE PERFORMANCE SUMMARY
+----------------------------------------
+             Department  Total_Students  Department_Average  Average_Attendance_%  Passed  Pass_Rate_%
+ Information Technology               5               77.52                 87.40       5       100.00
+Artificial Intelligence               5               75.88                 87.10       4        80.00
+           Data Science               5               74.88                 86.90       4        80.00
+       Computer Science               5               73.40                 85.30       4        80.00
+
+6. STUDENTS REQUIRING ATTENTION (FAIL / SHORTAGE)
+----------------------------------------
+StudentID         Name              Department  Average_Marks  Attendance                                                                                                                         Remarks
+   STU109 Aditya Joshi Artificial Intelligence          54.60       78.00                                                                                          Failed in subject(s): Mathematics (38)
+   STU111  Rahul Mehra            Data Science          46.20       71.00                                                       Average 46.20% below required 50.0%; Attendance 71.0% below minimum 75.0%
+   STU117 Varun Kapoor        Computer Science          40.00       65.00 Failed in subject(s): Mathematics (35), Physics (38); Average 40.00% below required 50.0%; Attendance 65.0% below minimum 75.0%

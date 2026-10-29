@@ -1,0 +1,21 @@
+StudentID,Name,Department,Mathematics,Physics,Computer_Science,Python_Programming,Data_Science,Attendance,Total_Marks,Average_Marks,Grade,Result,Remarks
+STU101,Aarav Sharma,Artificial Intelligence,92,88,95,98,94,96.5,467.0,93.4,A+,Pass,Cleared all academic & attendance requirements
+STU102,Diya Patel,Data Science,85,79,88,92,90,92.0,434.0,86.8,A,Pass,Cleared all academic & attendance requirements
+STU103,Rohan Verma,Computer Science,78,74,82,85,80,88.5,399.0,79.8,B,Pass,Cleared all academic & attendance requirements
+STU104,Ananya Iyer,Information Technology,95,91,96,94,97,98.0,473.0,94.6,A+,Pass,Cleared all academic & attendance requirements
+STU105,Vikram Singh,Artificial Intelligence,64,58,70,72,68,81.0,332.0,66.4,C,Pass,Cleared all academic & attendance requirements
+STU106,Neha Gupta,Computer Science,88,82,86,90,85,94.0,431.0,86.2,A,Pass,Cleared all academic & attendance requirements
+STU107,Karan Malhotra,Data Science,52,48,55,60,58,76.5,273.0,54.6,D,Pass,Cleared all academic & attendance requirements
+STU108,Pooja Nair,Information Technology,72,68,75,79,74,85.0,368.0,73.6,B,Pass,Cleared all academic & attendance requirements
+STU109,Aditya Joshi,Artificial Intelligence,38,55,62,58,60,78.0,273.0,54.6,D,Fail,Failed in subject(s): Mathematics (38)
+STU110,Sneha Kulkarni,Computer Science,90,86,92,95,93,95.5,456.0,91.2,A+,Pass,Cleared all academic & attendance requirements
+STU111,Rahul Mehra,Data Science,45,42,48,50,46,71.0,231.0,46.2,F,Fail,Average 46.20% below required 50.0%; Attendance 71.0% below minimum 75.0%
+STU112,Tanvi Deshmukh,Information Technology,82,80,85,88,84,90.5,419.0,83.8,A,Pass,Cleared all academic & attendance requirements
+STU113,Siddharth Rao,Artificial Intelligence,76,72,80,84,81,87.0,393.0,78.6,B,Pass,Cleared all academic & attendance requirements
+STU114,Meera Nambiar,Computer Science,68,64,72,75,70,83.5,349.0,69.8,C,Pass,Cleared all academic & attendance requirements
+STU115,Arjun Reddy,Data Science,96,94,98,99,97,99.0,484.0,96.8,A+,Pass,Cleared all academic & attendance requirements
+STU116,Riya Sen,Information Technology,59,62,65,68,64,79.5,318.0,63.6,C,Pass,Cleared all academic & attendance requirements
+STU117,Varun Kapoor,Computer Science,35,38,42,45,40,65.0,200.0,40.0,F,Fail,"Failed in subject(s): Mathematics (35), Physics (38); Average 40.00% below required 50.0%; Attendance 65.0% below minimum 75.0%"
+STU118,Ishita Chatterjee,Artificial Intelligence,84,81,89,91,87,93.0,432.0,86.4,A,Pass,Cleared all academic & attendance requirements
+STU119,Gaurav Bansal,Information Technology,70,66,74,78,72,84.0,360.0,72.0,B,Pass,Cleared all academic & attendance requirements
+STU120,Kavya Menon,Data Science,89,85,91,93,92,96.0,450.0,90.0,A+,Pass,Cleared all academic & attendance requirements
