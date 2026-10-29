@@ -101,7 +101,7 @@ If any criterion is not met, the student is marked **`Fail`** and the specific r
 
 ### 1. Clone or Download the Repository
 ```bash
-git clone https://github.com/<your-username>/student-performance-analytics.git
+git clone https://github.com/mohith4066/student-performance-analytics.git
 cd student-performance-analytics
 ```
 

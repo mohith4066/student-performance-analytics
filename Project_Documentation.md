@@ -182,7 +182,7 @@ The project successfully met and exceeded all objectives set forth in the EWB Py
 
 ## 10. GitHub Repository
 * **Repository Name:** `student-performance-analytics`
-* **Repository Link:** `https://github.com/<your-username>/student-performance-analytics` *(Update with your GitHub username)*
+* **Repository Link:** `https://github.com/mohith4066/student-performance-analytics` *(Update with your GitHub username)*
 * **Contents Included:**
   * `main.py`
   * `functions.py`
