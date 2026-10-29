@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Performance Analytics System | Live Dashboard</title>
+  <meta name="description" content="Interactive analytics dashboard for Student Performance Analytics System built with Python, NumPy, and Pandas.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --bg-dark: #090d16;
+      --card-bg: rgba(17, 24, 39, 0.75);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --card-hover: rgba(255, 255, 255, 0.12);
+      --primary: #6366f1;
+      --primary-glow: rgba(99, 102, 241, 0.25);
+      --accent: #38bdf8;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --radius: 14px;
+      --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(56, 189, 248, 0.12) 0px, transparent 50%),
+        radial-gradient(at 50% 50%, rgba(16, 185, 129, 0.05) 0px, transparent 50%);
+      background-attachment: fixed;
+      color: var(--text-main);
+      font-family: 'Inter', sans-serif;
+      line-height: 1.5;
+      padding: 30px 20px 60px 20px;
+    }
+
+    .container {
+      max-width: 1300px;
+      margin: 0 auto;
+    }
+
+    /* HEADER */
+    header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 35px;
+      padding-bottom: 25px;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .header-title h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 2.1rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #ffffff 30%, #94a3b8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.5px;
+    }
+
+    .header-title p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-top: 4px;
+    }
+
+    .header-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: var(--transition);
+    }
+
+    .badge-primary {
+      background: rgba(99, 102, 241, 0.15);
+      color: #a5b4fc;
+      border: 1px solid rgba(99, 102, 241, 0.3);
+    }
+
+    .badge-git {
+      background: rgba(255, 255, 255, 0.06);
+      color: #ffffff;
+      border: 1px solid var(--card-border);
+    }
+
+    .badge-git:hover {
+      background: rgba(255, 255, 255, 0.12);
+      transform: translateY(-2px);
+    }
+
+    /* KPI STATS GRID */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 18px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 22px;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--card-hover);
+      box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.5);
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      opacity: 0.8;
+    }
+
+    .stat-card.green::before { background: linear-gradient(90deg, #10b981, #34d399); }
+    .stat-card.gold::before { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+    .stat-card.cyan::before { background: linear-gradient(90deg, #06b6d4, #38bdf8); }
+
+    .stat-label {
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      font-weight: 600;
+    }
+
+    .stat-value {
+      font-family: 'Outfit', sans-serif;
+      font-size: 2.1rem;
+      font-weight: 700;
+      margin: 8px 0 4px 0;
+      color: #ffffff;
+    }
+
+    .stat-subtitle {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    /* PRACTICAL Q&A SECTION */
+    .qa-section {
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 30px;
+    }
+
+    .section-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-title span {
+      background: var(--primary-glow);
+      color: #818cf8;
+      font-size: 0.8rem;
+      padding: 3px 10px;
+      border-radius: 9999px;
+    }
+
+    .qa-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    .qa-item {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 16px;
+    }
+
+    .qa-question {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .qa-answer {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #38bdf8;
+    }
+
+    /* CHARTS GRID */
+    .charts-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    @media (max-width: 900px) {
+      .charts-grid { grid-template-columns: 1fr; }
+    }
+
+    .chart-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 24px;
+    }
+
+    /* LEADERBOARD & TABLES */
+    .card-full {
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 30px;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .search-box {
+      flex: 1;
+      min-width: 250px;
+      position: relative;
+    }
+
+    .search-box input {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--card-border);
+      color: #ffffff;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      outline: none;
+      transition: var(--transition);
+    }
+
+    .search-box input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-glow);
+    }
+
+    .filter-pills {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .pill-btn {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .pill-btn:hover, .pill-btn.active {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+    }
+
+    .table-container {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.88rem;
+    }
+
+    th {
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--text-muted);
+      font-size: 0.76rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    td {
+      padding: 13px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      color: #e2e8f0;
+    }
+
+    tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    /* BADGES FOR GRADES & STATUS */
+    .badge-grade {
+      display: inline-block;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 6px;
+      font-size: 0.78rem;
+    }
+
+    .grade-A-plus { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+    .grade-A { background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); }
+    .grade-B { background: rgba(129, 140, 248, 0.15); color: #818cf8; border: 1px solid rgba(129, 140, 248, 0.3); }
+    .grade-C { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+    .grade-D { background: rgba(251, 146, 60, 0.15); color: #fb923c; border: 1px solid rgba(251, 146, 60, 0.3); }
+    .grade-F { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 10px;
+      border-radius: 9999px;
+      font-size: 0.76rem;
+      font-weight: 600;
+    }
+
+    .status-pass {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+    }
+
+    .status-fail {
+      background: rgba(239, 68, 68, 0.15);
+      color: #f87171;
+    }
+
+    .rank-tag {
+      font-weight: 700;
+      font-size: 0.85rem;
+    }
+    .rank-1 { color: #fbbf24; }
+    .rank-2 { color: #cbd5e1; }
+    .rank-3 { color: #f97316; }
+
+    footer {
+      text-align: center;
+      padding-top: 30px;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      border-top: 1px solid var(--card-border);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <!-- HEADER -->
+    <header>
+      <div class="header-title">
+        <h1>Student Performance Analytics System</h1>
+        <p>EWB Courses | Python with AI Mini Project &bull; Live Interactive Dashboard</p>
+      </div>
+      <div class="header-badges">
+        <span class="badge badge-primary">⚡ Python &bull; NumPy &bull; Pandas</span>
+        <a href="https://github.com/mohith4066/student-performance-analytics" target="_blank" class="badge badge-git">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+          GitHub Repository
+        </a>
+      </div>
+    </header>
+
+    <!-- STATS CARDS -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Total Evaluated</div>
+        <div class="stat-value" id="kpi-total">20</div>
+        <div class="stat-subtitle">Across 4 Academic Departments</div>
+      </div>
+      <div class="stat-card cyan">
+        <div class="stat-label">Class Average</div>
+        <div class="stat-value" id="kpi-avg">75.42%</div>
+        <div class="stat-subtitle">Median: 79.20% | Std: 16.31</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-label">Passing Rate</div>
+        <div class="stat-value" id="kpi-pass">85.0%</div>
+        <div class="stat-subtitle">17 Passed &bull; 3 Under Review</div>
+      </div>
+      <div class="stat-card gold">
+        <div class="stat-label">Top Performer</div>
+        <div class="stat-value" style="font-size: 1.6rem;" id="kpi-top">Arjun Reddy</div>
+        <div class="stat-subtitle">96.80% Average &bull; Grade A+</div>
+      </div>
+    </div>
+
+    <!-- PRACTICAL QUESTIONS ANSWERED (STEP 4 OF ASSIGNMENT) -->
+    <div class="qa-section">
+      <div class="section-title">
+        Step 4: Practical Questions Answered <span>Assignment Objectives</span>
+      </div>
+      <div class="qa-grid">
+        <div class="qa-item">
+          <div class="qa-question">1. Which student has the highest average?</div>
+          <div class="qa-answer">Arjun Reddy (STU115) &mdash; 96.80% (Grade A+)</div>
+        </div>
+        <div class="qa-item">
+          <div class="qa-question">2. Which subject has the best average?</div>
+          <div class="qa-answer">Python Programming &mdash; 79.70 / 100 Mean</div>
+        </div>
+        <div class="qa-item">
+          <div class="qa-question">3. How many students passed?</div>
+          <div class="qa-answer">17 out of 20 Students (85.0% Pass Rate)</div>
+        </div>
+        <div class="qa-item">
+          <div class="qa-question">4. What is the overall class average?</div>
+          <div class="qa-answer">75.42% Aggregate (Median: 79.20%)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHARTS -->
+    <div class="charts-grid">
+      <div class="chart-card">
+        <div class="section-title">Subject-Wise Performance (NumPy Aggregations)</div>
+        <canvas id="subjectChart" height="150"></canvas>
+      </div>
+      <div class="chart-card">
+        <div class="section-title">Grade Distribution</div>
+        <canvas id="gradeChart" height="150"></canvas>
+      </div>
+    </div>
+
+    <!-- TOP PERFORMERS LEADERBOARD -->
+    <div class="card-full">
+      <div class="section-title">🏆 Top 5 Performing Students (Leaderboard)</div>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>Student ID</th>
+              <th>Name</th>
+              <th>Department</th>
+              <th>Total Marks</th>
+              <th>Average %</th>
+              <th>Grade</th>
+              <th>Attendance</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="leaderboardBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- FULL STUDENT DATA TABLE -->
+    <div class="card-full">
+      <div class="section-title">📚 Full Student Performance Records</div>
+      
+      <div class="toolbar">
+        <div class="search-box">
+          <input type="text" id="searchInput" placeholder="Search by student name or ID..." onkeyup="filterData()">
+        </div>
+        <div class="filter-pills">
+          <button class="pill-btn active" onclick="setDeptFilter('All', this)">All</button>
+          <button class="pill-btn" onclick="setDeptFilter('Artificial Intelligence', this)">AI</button>
+          <button class="pill-btn" onclick="setDeptFilter('Computer Science', this)">CS</button>
+          <button class="pill-btn" onclick="setDeptFilter('Data Science', this)">Data Science</button>
+          <button class="pill-btn" onclick="setDeptFilter('Information Technology', this)">IT</button>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Student ID</th>
+              <th>Name</th>
+              <th>Department</th>
+              <th>Maths</th>
+              <th>Physics</th>
+              <th>CS</th>
+              <th>Python</th>
+              <th>Data Sci</th>
+              <th>Attendance</th>
+              <th>Average</th>
+              <th>Grade</th>
+              <th>Result</th>
+              <th>Remarks</th>
+            </tr>
+          </thead>
+          <tbody id="studentTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+      <p>Student Performance Analytics System &bull; Project Assignment for Python with AI Students &bull; EWB Courses</p>
+      <p style="margin-top: 6px; font-size: 0.8rem; color: #64748b;">
+        Automated analysis generated using NumPy & Pandas &bull; Hosted live via GitHub Pages
+      </p>
+    </footer>
+
+  </div>
+
+  <script>
+    // Embedded Dataset generated from processed_students.csv
+    const students = [{"StudentID": "STU101", "Name": "Aarav Sharma", "Department": "Artificial Intelligence", "Mathematics": 92, "Physics": 88, "Computer_Science": 95, "Python_Programming": 98, "Data_Science": 94, "Attendance": 96.5, "Total_Marks": 467.0, "Average_Marks": 93.4, "Grade": "A+", "Result": "Pass", "Remarks": "Cleared all academic & attendance requirements"}, {"StudentID": "STU102", "Name": "Diya Patel", "Department": "Data Science", "Mathematics": 85, "Physics": 79, "Computer_Science": 88, "Python_Programming": 92, "Data_Science": 90, "Attendance": 92.0, "Total_Marks": 434.0, "Average_Marks": 86.8, "Grade": "A", "Result": "Pass", "Remarks": "Cleared all academic & attendance requirements"}, {"StudentID": "STU103", "Name": "Rohan Verma", "Department": "Computer Science", "Mathematics": 78, "Physics": 74, "Computer_Science": 82, "Python_Programming": 85, "Data_Science": 80, "Attendance": 88.5, "Total_Marks": 399.0, "Average_Marks": 79.8, "Grade": "B", "Result": "Pass", "Remarks": "Cleared all academic & attendance requirements"}, {"StudentID": "STU104", "Name": "Ananya Iyer", "Department": "Information Technology", "Mathematics": 95, "Physics": 91, "Computer_Science": 96, "Python_Programming": 94, "Data_Science": 97, "Attendance": 98.0, "Total_Marks": 473.0, "Average_Marks": 94.6, "Grade": "A+", "Result": "Pass", "Remarks": "Cleared all academic & attendance requirements"}, {"StudentID": "STU105", "Name": "Vikram Singh", "Department": "Artificial Intelligence", "Mathematics": 64, "Physics": 58, "Computer_Science": 70, "Python_Programming": 72, "Data_Science": 68, "Attendance": 81.0, "Total_Marks": 332.0, "Average_Marks": 66.4, "Grade": "C", "Result": "Pass", "Remarks": "Cleared all academic & attendance requirements"}, {"StudentID": "STU106", "Name": "Neha Gupta", "Department": "Computer Science", "Mathematics": 88, "Physics": 82, "Computer_Science": 86, "Python_Programming": 90, "Data_Science": 85, "Attendance": 94.0, "Total_Marks": 431.0, "Average_Marks": 86.2, "Grade": "A", "Result": "Pass", "Remarks": "Cleared all academic & attendance requirements"}, {"StudentID": "STU107", "Name": "Karan Malhotra", "Department": "Data Science", "Mathematics": 52, "Physics": 48, "Computer_Science": 55, "Python_Programming": 60, "Data_Science": 58, "Attendance": 76.5, "Total_Marks": 273.0, "Average_Marks": 54.6, "Grade": "D", "Result": "Pass", "Remarks": "Cleared all academic & attendance requirements"}, {"StudentID": "STU108", "Name": "Pooja Nair", "Department": "Information Technology", "Mathematics": 72, "Physics": 68, "Computer_Science": 75, "Python_Programming": 79, "Data_Science": 74, "Attendance": 85.0, "Total_Marks": 368.0, "Average_Marks": 73.6, "Grade": "B", "Result": "Pass", "Remarks": "Cleared all academic & attendance requirements"}, {"StudentID": "STU109", "Name": "Aditya Joshi", "Department": "Artificial Intelligence", "Mathematics": 38, "Physics": 55, "Computer_Science": 62, "Python_Programming": 58, "Data_Science": 60, "Attendance": 78.0, "Total_Marks": 273.0, "Average_Marks": 54.6, "Grade": "D", "Result": "Fail", "Remarks": "Failed in subject(s): Mathematics (38)"}, {"StudentID": "STU110", "Name": "Sneha Kulkarni", "Department": "Computer Science", "Mathematics": 90, "Physics": 86, "Computer_Science": 92, "Python_Programming": 95, "Data_Science": 93, "Attendance": 95.5, "Total_Marks": 456.0, "Average_Marks": 91.2, "Grade": "A+", "Result": "Pass", "Remarks": "Cleared all academic & attendance requirements"}, {"StudentID": "STU111", "Name": "Rahul Mehra", "Department": "Data Science", "Mathematics": 45, "Physics": 42, "Computer_Science": 48, "Python_Programming": 50, "Data_Science": 46, "Attendance": 71.0, "Total_Marks": 231.0, "Average_Marks": 46.2, "Grade": "F", "Result": "Fail", "Remarks": "Average 46.20% below required 50.0%; Attendance 71.0% below minimum 75.0%"}, {"StudentID": "STU112", "Name": "Tanvi Deshmukh", "Department": "Information Technology", "Mathematics": 82, "Physics": 80, "Computer_Science": 85, "Python_Programming": 88, "Data_Science": 84, "Attendance": 90.5, "Total_Marks": 419.0, "Average_Marks": 83.8, "Grade": "A", "Result": "Pass", "Remarks": "Cleared all academic & attendance requirements"}, {"StudentID": "STU113", "Name": "Siddharth Rao", "Department": "Artificial Intelligence", "Mathematics": 76, "Physics": 72, "Computer_Science": 80, "Python_Programming": 84, "Data_Science": 81, "Attendance": 87.0, "Total_Marks": 393.0, "Average_Marks": 78.6, "Grade": "B", "Result": "Pass", "Remarks": "Cleared all academic & attendance requirements"}, {"StudentID": "STU114", "Name": "Meera Nambiar", "Department": "Computer Science", "Mathematics": 68, "Physics": 64, "Computer_Science": 72, "Python_Programming": 75, "Data_Science": 70, "Attendance": 83.5, "Total_Marks": 349.0, "Average_Marks": 69.8, "Grade": "C", "Result": "Pass", "Remarks": "Cleared all academic & attendance requirements"}, {"StudentID": "STU115", "Name": "Arjun Reddy", "Department": "Data Science", "Mathematics": 96, "Physics": 94, "Computer_Science": 98, "Python_Programming": 99, "Data_Science": 97, "Attendance": 99.0, "Total_Marks": 484.0, "Average_Marks": 96.8, "Grade": "A+", "Result": "Pass", "Remarks": "Cleared all academic & attendance requirements"}, {"StudentID": "STU116", "Name": "Riya Sen", "Department": "Information Technology", "Mathematics": 59, "Physics": 62, "Computer_Science": 65, "Python_Programming": 68, "Data_Science": 64, "Attendance": 79.5, "Total_Marks": 318.0, "Average_Marks": 63.6, "Grade": "C", "Result": "Pass", "Remarks": "Cleared all academic & attendance requirements"}, {"StudentID": "STU117", "Name": "Varun Kapoor", "Department": "Computer Science", "Mathematics": 35, "Physics": 38, "Computer_Science": 42, "Python_Programming": 45, "Data_Science": 40, "Attendance": 65.0, "Total_Marks": 200.0, "Average_Marks": 40.0, "Grade": "F", "Result": "Fail", "Remarks": "Failed in subject(s): Mathematics (35), Physics (38); Average 40.00% below required 50.0%; Attendance 65.0% below minimum 75.0%"}, {"StudentID": "STU118", "Name": "Ishita Chatterjee", "Department": "Artificial Intelligence", "Mathematics": 84, "Physics": 81, "Computer_Science": 89, "Python_Programming": 91, "Data_Science": 87, "Attendance": 93.0, "Total_Marks": 432.0, "Average_Marks": 86.4, "Grade": "A", "Result": "Pass", "Remarks": "Cleared all academic & attendance requirements"}, {"StudentID": "STU119", "Name": "Gaurav Bansal", "Department": "Information Technology", "Mathematics": 70, "Physics": 66, "Computer_Science": 74, "Python_Programming": 78, "Data_Science": 72, "Attendance": 84.0, "Total_Marks": 360.0, "Average_Marks": 72.0, "Grade": "B", "Result": "Pass", "Remarks": "Cleared all academic & attendance requirements"}, {"StudentID": "STU120", "Name": "Kavya Menon", "Department": "Data Science", "Mathematics": 89, "Physics": 85, "Computer_Science": 91, "Python_Programming": 93, "Data_Science": 92, "Attendance": 96.0, "Total_Marks": 450.0, "Average_Marks": 90.0, "Grade": "A+", "Result": "Pass", "Remarks": "Cleared all academic & attendance requirements"}];
+
+    let currentDept = 'All';
+
+    function getGradeClass(grade) {
+      if (grade === 'A+') return 'grade-A-plus';
+      return `grade-${grade}`;
+    }
+
+    // Populate Leaderboard
+    function populateLeaderboard() {
+      const sorted = [...students].sort((a, b) => b.Average_Marks - a.Average_Marks).slice(0, 5);
+      const tbody = document.getElementById('leaderboardBody');
+      tbody.innerHTML = '';
+
+      sorted.forEach((s, idx) => {
+        const rankClass = idx === 0 ? 'rank-1' : idx === 1 ? 'rank-2' : idx === 2 ? 'rank-3' : '';
+        const rankSymbol = idx === 0 ? '🥇 Rank 1' : idx === 1 ? '🥈 Rank 2' : idx === 2 ? '🥉 Rank 3' : `Rank ${idx + 1}`;
+        
+        const row = `
+          <tr>
+            <td class="rank-tag ${rankClass}">${rankSymbol}</td>
+            <td><strong>${s.StudentID}</strong></td>
+            <td>${s.Name}</td>
+            <td>${s.Department}</td>
+            <td><strong>${s.Total_Marks}</strong> / 500</td>
+            <td><strong>${s.Average_Marks.toFixed(2)}%</strong></td>
+            <td><span class="badge-grade ${getGradeClass(s.Grade)}">${s.Grade}</span></td>
+            <td>${s.Attendance.toFixed(1)}%</td>
+            <td><span class="status-pill status-pass">● ${s.Result}</span></td>
+          </tr>
+        `;
+        tbody.innerHTML += row;
+      });
+    }
+
+    // Populate Full Table
+    function renderTable(data) {
+      const tbody = document.getElementById('studentTableBody');
+      tbody.innerHTML = '';
+
+      data.forEach(s => {
+        const statusClass = s.Result === 'Pass' ? 'status-pass' : 'status-fail';
+        const row = `
+          <tr>
+            <td><strong>${s.StudentID}</strong></td>
+            <td>${s.Name}</td>
+            <td>${s.Department}</td>
+            <td>${s.Mathematics}</td>
+            <td>${s.Physics}</td>
+            <td>${s.Computer_Science}</td>
+            <td>${s.Python_Programming}</td>
+            <td>${s.Data_Science}</td>
+            <td>${s.Attendance.toFixed(1)}%</td>
+            <td><strong>${s.Average_Marks.toFixed(2)}%</strong></td>
+            <td><span class="badge-grade ${getGradeClass(s.Grade)}">${s.Grade}</span></td>
+            <td><span class="status-pill ${statusClass}">● ${s.Result}</span></td>
+            <td style="font-size: 0.8rem; color: #94a3b8;">${s.Remarks}</td>
+          </tr>
+        `;
+        tbody.innerHTML += row;
+      });
+    }
+
+    function filterData() {
+      const query = document.getElementById('searchInput').value.toLowerCase();
+      const filtered = students.filter(s => {
+        const matchDept = currentDept === 'All' || s.Department === currentDept;
+        const matchQuery = s.Name.toLowerCase().includes(query) || s.StudentID.toLowerCase().includes(query);
+        return matchDept && matchQuery;
+      });
+      renderTable(filtered);
+    }
+
+    function setDeptFilter(dept, btn) {
+      currentDept = dept;
+      document.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      filterData();
+    }
+
+    // Chart.js Setup
+    function initCharts() {
+      // 1. Subject Performance Bar Chart
+      const ctxSubject = document.getElementById('subjectChart').getContext('2d');
+      new Chart(ctxSubject, {
+        type: 'bar',
+        data: {
+          labels: ['Mathematics', 'Physics', 'Computer Science', 'Python Programming', 'Data Science'],
+          datasets: [{
+            label: 'Average Score (/100)',
+            data: [72.90, 70.65, 77.25, 79.70, 76.60],
+            backgroundColor: [
+              'rgba(99, 102, 241, 0.7)',
+              'rgba(56, 189, 248, 0.7)',
+              'rgba(16, 185, 129, 0.7)',
+              'rgba(245, 158, 11, 0.7)',
+              'rgba(168, 85, 247, 0.7)'
+            ],
+            borderColor: [
+              '#6366f1', '#38bdf8', '#10b981', '#f59e0b', '#a855f7'
+            ],
+            borderWidth: 1.5,
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { display: false }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              max: 100,
+              grid: { color: 'rgba(255, 255, 255, 0.05)' },
+              ticks: { color: '#94a3b8' }
+            },
+            x: {
+              grid: { display: false },
+              ticks: { color: '#94a3b8', font: { size: 11 } }
+            }
+          }
+        }
+      });
+
+      // 2. Grade Distribution Doughnut Chart
+      const ctxGrade = document.getElementById('gradeChart').getContext('2d');
+      new Chart(ctxGrade, {
+        type: 'doughnut',
+        data: {
+          labels: ['A+ (90%+)', 'A (80-89%)', 'B (70-79%)', 'C (60-69%)', 'D (50-59%)', 'F (<50%)'],
+          datasets: [{
+            data: [5, 4, 4, 3, 2, 2],
+            backgroundColor: ['#10b981', '#38bdf8', '#818cf8', '#f59e0b', '#fb923c', '#ef4444'],
+            borderColor: '#090d16',
+            borderWidth: 2
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: { color: '#94a3b8', font: { size: 11 } }
+            }
+          }
+        }
+      });
+    }
+
+    // Init
+    window.onload = function() {
+      populateLeaderboard();
+      renderTable(students);
+      initCharts();
+    };
+  </script>
+</body>
+</html>
